@@ -1,0 +1,20 @@
+.btn-add {
+  border-radius: 0.5rem;
+  border: 1px solid #179b46;
+  background-color: #179b46;
+  color: #fff;
+  padding: 0.4rem;
+}
+
+.btn-add:hover {
+  color: #fff;
+  text-decoration: none;
+  background-color: #179b457d;
+  border: 1px solid #179b457d;
+}
+
+.info-section p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
