@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import "./Add_edit_form.css";
 
 const clearInputs = {
-  dataReceipt: "",
-  clientName: "",
-  value: "",
-  formReceipt: "",
-};
+  dataReceipt: '',
+  clientName: '',
+  value: '',
+  formReceipt: '',
+}
 
 export default function AddEditReceiptForm(props) {
   const [receiptToEdit, setReceiptToEdit] = useState(getReceipt());
@@ -16,7 +16,7 @@ export default function AddEditReceiptForm(props) {
     const { name, value } = e.target;
 
     setReceiptToEdit({ ...receiptToEdit, [name]: value });
-  };
+  }
 
   useEffect(() => {
     if (props.receiptToEdit.id !== 0) {
@@ -30,6 +30,12 @@ export default function AddEditReceiptForm(props) {
     if (props.receiptToEdit.id !== 0) {
       return props.receiptToEdit;
     }
+  }
+
+  // método de cancelar a edição
+  const clearForm = () => {
+    setReceiptToEdit(clearInputs);
+    setEdit(false);
   }
 
   return (
@@ -58,7 +64,7 @@ export default function AddEditReceiptForm(props) {
                   <div className="col-12 col-md-6 pb-2">
                     <input
                       id="clientName"
-                      type={"text"}
+                      type={'text'}
                       className="form-control"
                       placeholder="Nome Cliente"
                       name="clientName"
@@ -69,7 +75,7 @@ export default function AddEditReceiptForm(props) {
                   <div className="col-12 col-md-6 pb-2">
                     <input
                       id="value"
-                      type={"text"}
+                      type={'text'}
                       className="form-control"
                       placeholder="Valor a receber"
                       name="value"
@@ -81,42 +87,29 @@ export default function AddEditReceiptForm(props) {
                     <select
                       id="formReceipt"
                       className="custom-select"
-                      name="formReceipt"
+                      name='formReceipt'
                       onChange={inputHandler}
-                      value={receiptToEdit.formReceipt}
-                    >
-                      <option defaultValue="0">Selecionar</option>
+                      value={receiptToEdit.formReceipt}>
+                      <option defaultValue='0'>Selecionar</option>
                       <option value="Dinheiro">Dinheiro</option>
                       <option value="Cartão">Cartão</option>
                       <option value="Pix">Pix</option>
                     </select>
                   </div>
-                  {edit == false ? (
-                    <div className="d-flex justify-content-end col-sm-12">
-                      <button type="submit" className="btn-add mt-3 mb-0">
-                        Salvar Recebimento
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="d-flex justify-content-end col-sm-12">
-                        <button
-                          type="button"
-                          className="btn-cancel mt-3 mb-0 mx-2"
-                          onClick={props.clearForm}
-                        >
-                          Cancelar
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-add mt-3 mb-0"
-                          onClick={props.setReceipt()}
-                        >
-                          Editar Recebimento
-                        </button>
-                      </div>
-                    </>
-                  )}
+                  <div className="d-flex justify-content-end col-sm-12">
+                    {
+                      edit == false ?
+                        <button type='submit' className="btn-add mt-3 mb-0">Salvar Recebimento</button> :
+                        (
+                          <>
+                            <div className="d-flex justify-content-end col-sm-12">
+                              <button type='button' className="btn-cancel mt-3 mb-0 mx-2" onClick={clearForm}>Cancelar</button>
+                              <button type='button' className="btn-add mt-3 mb-0">Editar Recebimento</button>
+                            </div>
+                          </>
+                        )
+                    }
+                  </div>
                 </div>
               </form>
             </div>
@@ -124,5 +117,5 @@ export default function AddEditReceiptForm(props) {
         </div>
       </section>
     </div>
-  );
+  )
 }

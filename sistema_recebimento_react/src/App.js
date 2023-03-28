@@ -10,13 +10,14 @@ import AddEditReceiptForm from "./components/Receipts/Add_Edit-receipt/Add_edit_
 let initialState = [];
 
 const clearInputs = {
-  dataReceipt: "",
-  clientName: "",
-  value: "",
-  formReceipt: "",
-};
+  dataReceipt: '',
+  clientName: '',
+  value: '',
+  formReceipt: '',
+}
 
 function App() {
+
   // Array de alteração de estado da lista de exibição
   const [receipts, setReceipts] = useState(initialState);
 
@@ -30,20 +31,16 @@ function App() {
     let incrementId = 0;
 
     // Formata a data para exibição na tabela
-    let formatDateInput = document
-      .getElementById("dataReceipt")
-      .value.split("-");
+    let formatDateInput = document.getElementById("dataReceipt").value.split("-");
     let dateFormated = `${formatDateInput[2]}/${formatDateInput[1]}/${formatDateInput[0]}`;
 
     // Formata o valor para exibição na tabela
     let formatValueInput = document.getElementById("value").value;
-    let valueInput = formatValueInput.replace(",", ".");
-    let valueFormated = Number(valueInput)
-      .toFixed(2)
-      .replace(".", ",");
+    let valueInput = formatValueInput.replace(',', '.');
+    let valueFormated = Number(valueInput).toFixed(2).replace('.', ',');
 
     for (let i = 0; i <= receipts.length; i++) {
-      incrementId++;
+      incrementId++
     }
 
     const receipt = {
@@ -54,12 +51,7 @@ function App() {
       formReceipt: document.getElementById("formReceipt").value,
     };
 
-    if (
-      formatDateInput != "" &&
-      receipt.clientName != "" &&
-      receipt.value != "" &&
-      receipt.formReceipt
-    ) {
+    if (formatDateInput != "" && receipt.clientName != "" && receipt.value != "" && receipt.formReceipt) {
       setReceipts([...receipts, { ...receipt }]);
 
       alert("Recebimento salvo com sucesso!");
@@ -72,19 +64,19 @@ function App() {
 
   // Funcao de Delete dos recebimentos
   function deleteReceipt(id) {
-    const receiptsFilter = receipts.filter((receipt) => receipt.id !== id);
+    const receiptsFilter = receipts.filter(receipt => receipt.id !== id);
 
     setReceipts([...receiptsFilter]);
   }
 
-  // Função para pegar um recebimento e enserir nos campos para edição
-  function getReceipt(id) {
-    const receiptsFilter = receipts.filter((receipt) => receipt.id === id);
+  // Função para editar recebimentos
+  function EditReceipt(id) {
+    const receiptsFilter = receipts.filter(receipt => receipt.id === id);
 
     // Converte a data para o padrão USA para inserir no campo ao editar
     let formatDate = receiptsFilter[0].dataReceipt;
-    let date = formatDate.split("/");
-    let dateFormated = `${date[2]}-${date[1]}-${date[0]}`;
+    let date = formatDate.split('/');
+    let dateFormated = `${date[2]}-${date[1]}-${date[0]}`
 
     const data = {
       id: receiptsFilter[0].id,
@@ -92,26 +84,11 @@ function App() {
       clientName: receiptsFilter[0].clientName,
       value: receiptsFilter[0].value,
       formReceipt: receiptsFilter[0].formReceipt,
-    };
+    }
 
     setEdit(true);
     setReceiptToEdit(data);
   }
-
-  // Função para salvar a edição dos recebimentos
-  function setReceipt(receipt) {
-    setReceipts(
-      receipts.map((value) => (value.id === receipt.id ? receipt : value))
-    );
-
-    alert("Recebimento editado com sucesso!");
-  }
-
-  // método de cancelar a edição
-  const clearForm = () => {
-    setReceiptToEdit(clearInputs);
-    setEdit(false);
-  };
 
   return (
     <>
@@ -121,14 +98,12 @@ function App() {
         onSubmitForm={onSubmitForm}
         receiptToEdit={receiptToEdit}
         edit={edit}
-        setReceipt={setReceipt}
-        clearForm={clearForm}
       />
 
       <ListReceipts
         deleteReceipt={deleteReceipt}
         receipts={receipts}
-        EditReceipt={getReceipt}
+        EditReceipt={EditReceipt}
       />
 
       <Footer />
