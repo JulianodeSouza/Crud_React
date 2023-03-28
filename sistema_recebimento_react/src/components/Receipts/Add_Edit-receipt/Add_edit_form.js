@@ -104,7 +104,7 @@ export default function AddEditReceiptForm(props) {
                           <>
                             <div className="d-flex justify-content-end col-sm-12">
                               <button type='button' className="btn-cancel mt-3 mb-0 mx-2" onClick={clearForm}>Cancelar</button>
-                              <button type='button' className="btn-add mt-3 mb-0">Editar Recebimento</button>
+                              <button type='button' className="btn-add mt-3 mb-0" onClick={() => props.saveEdit(receiptToEdit)}>Editar Recebimento</button>
                             </div>
                           </>
                         )

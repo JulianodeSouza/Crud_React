@@ -29,7 +29,7 @@ export default function ListReceipts(props) {
                 <td>{receipt.formReceipt}</td>
                 <td>
                   <div className="d-flex">
-                    <a><i className="button-action edit fa-solid fa-pen-to-square fa-lg px-3" onClick={() => props.EditReceipt(receipt.id)}></i></a>
+                    <a><i className="button-action edit fa-solid fa-pen-to-square fa-lg px-3" onClick={() => props.getReceipt(receipt.id)}></i></a>
                     <a><i className="button-action trash fa-solid fa-trash fa-lg" onClick={() => props.deleteReceipt(receipt.id)}></i></a>
                   </div>
                 </td>

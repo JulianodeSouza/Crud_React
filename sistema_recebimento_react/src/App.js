@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./App.css";
 
 // components
-import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import ListReceipts from "./components/Receipts/List-receipts/List-receipts";
 import AddEditReceiptForm from "./components/Receipts/Add_Edit-receipt/Add_edit_form";
@@ -12,7 +11,7 @@ let initialState = [];
 const clearInputs = {
   dataReceipt: '',
   clientName: '',
-  value: '',
+  value: 0,
   formReceipt: '',
 }
 
@@ -25,7 +24,7 @@ function App() {
   const [receiptToEdit, setReceiptToEdit] = useState({});
   const [edit, setEdit] = useState(false);
 
-  // Função para alteração dos campos de novo recebimento
+  // Função para salvar um novo recebimento
   function onSubmitForm($event) {
     $event.preventDefault();
     let incrementId = 0;
@@ -53,9 +52,7 @@ function App() {
 
     if (formatDateInput != "" && receipt.clientName != "" && receipt.value != "" && receipt.formReceipt) {
       setReceipts([...receipts, { ...receipt }]);
-
       alert("Recebimento salvo com sucesso!");
-
       setReceiptToEdit(clearInputs);
     } else {
       alert("Preencha todos os campos corretamente!");
@@ -69,8 +66,8 @@ function App() {
     setReceipts([...receiptsFilter]);
   }
 
-  // Função para editar recebimentos
-  function EditReceipt(id) {
+  // Função setar o recebimento nos campos do formulario
+  function getReceipt(id) {
     const receiptsFilter = receipts.filter(receipt => receipt.id === id);
 
     // Converte a data para o padrão USA para inserir no campo ao editar
@@ -90,6 +87,38 @@ function App() {
     setReceiptToEdit(data);
   }
 
+  // função para salvar a edição
+  function saveEdit(receipt) {
+
+    setReceipts(receipts.map(value => {
+      if (value.id === receipt.id) {
+        // Formata a data para exibição na tabela
+        let formatDateInput = receipt.dataReceipt.split("-");
+        let dateFormated = `${formatDateInput[2]}/${formatDateInput[1]}/${formatDateInput[0]}`;
+
+        // Formata o valor para exibição na tabela
+        let formatValueInput = document.getElementById("value").value;
+        let valueInput = formatValueInput.replace(',', '.');
+        let valueFormated = Number(valueInput).toFixed(2).replace('.', ',');
+
+        const data = {
+          id: receipt.id,
+          dataReceipt: dateFormated,
+          clientName: receipt.clientName,
+          value: valueFormated,
+          formReceipt: receipt.formReceipt,
+        };
+
+        return data;
+      } else {
+        return value;
+      }
+    }));
+    setReceiptToEdit(clearInputs);
+    setEdit(false);
+    alert("Edição salvo com sucesso!");
+  }
+
   return (
     <>
       <Header />
@@ -98,15 +127,14 @@ function App() {
         onSubmitForm={onSubmitForm}
         receiptToEdit={receiptToEdit}
         edit={edit}
+        saveEdit={saveEdit}
       />
 
       <ListReceipts
         deleteReceipt={deleteReceipt}
         receipts={receipts}
-        EditReceipt={EditReceipt}
+        getReceipt={getReceipt}
       />
-
-      <Footer />
     </>
   );
 }
