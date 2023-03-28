@@ -2,50 +2,63 @@ import React, { useState } from "react";
 import "./App.css";
 
 // components
-import AddReceiptForm from "./components/Add-receipt/Add_receipt_form";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
-import ListReceipts from "./components/List-receipts/List-receipts";
+import ListReceipts from "./components/Receipts/List-receipts/List-receipts";
+import AddEditReceiptForm from "./components/Receipts/Add_Edit-receipt/Add_edit_form";
 
 let initialState = [];
 
+const clearInputs = {
+  dataReceipt: '',
+  clientName: '',
+  value: '',
+  formReceipt: '',
+}
+
 function App() {
-  // Array de armazenamento dos recebimentos
+
+  // Array de alteração de estado da lista de exibição
   const [receipts, setReceipts] = useState(initialState);
+
+  // Variavel de alteração de estado dos campos
+  const [receiptToEdit, setReceiptToEdit] = useState({});
+  const [edit, setEdit] = useState(false);
 
   // Função para alteração dos campos de novo recebimento
   function onSubmitForm($event) {
     $event.preventDefault();
+    let incrementId = 0;
 
-    // Variavel para formatação da data
-    let formatDate = document.getElementById("dataReceipt").value.split("-");
+    // Formata a data para exibição na tabela
+    let formatDateInput = document.getElementById("dataReceipt").value.split("-");
+    let dateFormated = `${formatDateInput[2]}/${formatDateInput[1]}/${formatDateInput[0]}`;
 
-    if (formatDate != "") {
+    // Formata o valor para exibição na tabela
+    let formatValueInput = document.getElementById("value").value;
+    let valueInput = formatValueInput.replace(',', '.');
+    let valueFormated = Number(valueInput).toFixed(2).replace('.', ',');
 
-      // Formata a data para exibição na tabela
-      let day = formatDate[2];
-      let month = formatDate[1];
-      let year = formatDate[0];
-      let dateFormated = `${day}/${month}/${year}`;
-      // Formata a data para exibição na tabela
+    for (let i = 0; i <= receipts.length; i++) {
+      incrementId++
+    }
 
-      const receipt = {
-        id: Math.max.apply(Math, [receipts.map(item => item.id++)]),
-        dataReceipt: dateFormated,
-        clientName: document.getElementById("clientName").value,
-        value: document.getElementById("value").value,
-        formReceipt: document.getElementById("formReceipt").value,
-      };
+    const receipt = {
+      id: incrementId,
+      dataReceipt: dateFormated,
+      clientName: document.getElementById("clientName").value,
+      value: valueFormated,
+      formReceipt: document.getElementById("formReceipt").value,
+    };
 
-      if (receipt.clientName != "" && receipt.value != "" && receipt.formReceipt) {
-        receipts.push(receipt);
-        setReceipts([...receipts]);
+    if (formatDateInput != "" && receipt.clientName != "" && receipt.value != "" && receipt.formReceipt) {
+      setReceipts([...receipts, { ...receipt }]);
 
-      } else {
-        alert("Preencha todos os campos corretamente!");
-      }
+      alert("Recebimento salvo com sucesso!");
+
+      setReceiptToEdit(clearInputs);
     } else {
-      alert("Insira uma data válida");
+      alert("Preencha todos os campos corretamente!");
     }
   }
 
@@ -56,18 +69,41 @@ function App() {
     setReceipts([...receiptsFilter]);
   }
 
+  // Função para editar recebimentos
+  function EditReceipt(id) {
+    const receiptsFilter = receipts.filter(receipt => receipt.id === id);
+
+    // Converte a data para o padrão USA para inserir no campo ao editar
+    let formatDate = receiptsFilter[0].dataReceipt;
+    let date = formatDate.split('/');
+    let dateFormated = `${date[2]}-${date[1]}-${date[0]}`
+
+    const data = {
+      id: receiptsFilter[0].id,
+      dataReceipt: dateFormated,
+      clientName: receiptsFilter[0].clientName,
+      value: receiptsFilter[0].value,
+      formReceipt: receiptsFilter[0].formReceipt,
+    }
+
+    setEdit(true);
+    setReceiptToEdit(data);
+  }
+
   return (
     <>
       <Header />
 
-      <AddReceiptForm
+      <AddEditReceiptForm
         onSubmitForm={onSubmitForm}
-        receipts={receipts}
+        receiptToEdit={receiptToEdit}
+        edit={edit}
       />
 
       <ListReceipts
         deleteReceipt={deleteReceipt}
         receipts={receipts}
+        EditReceipt={EditReceipt}
       />
 
       <Footer />
