@@ -9,14 +9,13 @@ import AddEditReceiptForm from "./components/Receipts/Add_Edit-receipt/Add_edit_
 let initialState = [];
 
 const clearInputs = {
-  dataReceipt: '',
-  clientName: '',
+  dataReceipt: "",
+  clientName: "",
   value: 0,
-  formReceipt: '',
-}
+  formReceipt: "",
+};
 
 function App() {
-
   // Array de alteração de estado da lista de exibição
   const [receipts, setReceipts] = useState(initialState);
 
@@ -30,16 +29,18 @@ function App() {
     let incrementId = 0;
 
     // Formata a data para exibição na tabela
-    let formatDateInput = document.getElementById("dataReceipt").value.split("-");
-    let dateFormated = `${formatDateInput[2]}/${formatDateInput[1]}/${formatDateInput[0]}`;
+    const formatDateInput = document
+      .getElementById("dataReceipt")
+      .value.split("-");
+    const dateFormated = `${formatDateInput[2]}/${formatDateInput[1]}/${formatDateInput[0]}`;
 
     // Formata o valor para exibição na tabela
-    let formatValueInput = document.getElementById("value").value;
-    let valueInput = formatValueInput.replace(',', '.');
-    let valueFormated = Number(valueInput).toFixed(2).replace('.', ',');
+    const formatValueInput = document.getElementById("value").value;
+    const valueInput = formatValueInput.replace(",", ".");
+    const valueFormated = Number(valueInput).toFixed(2).replace(".", ",");
 
     for (let i = 0; i <= receipts.length; i++) {
-      incrementId++
+      incrementId++;
     }
 
     const receipt = {
@@ -50,7 +51,12 @@ function App() {
       formReceipt: document.getElementById("formReceipt").value,
     };
 
-    if (formatDateInput != "" && receipt.clientName != "" && receipt.value != "" && receipt.formReceipt) {
+    if (
+      formatDateInput !== "" &&
+      receipt.clientName !== "" &&
+      receipt.value !== "" &&
+      receipt.formReceipt
+    ) {
       setReceipts([...receipts, { ...receipt }]);
       alert("Recebimento salvo com sucesso!");
       setReceiptToEdit(clearInputs);
@@ -61,19 +67,19 @@ function App() {
 
   // Funcao de Delete dos recebimentos
   function deleteReceipt(id) {
-    const receiptsFilter = receipts.filter(receipt => receipt.id !== id);
+    const receiptsFilter = receipts.filter((receipt) => receipt.id !== id);
 
     setReceipts([...receiptsFilter]);
   }
 
   // Função setar o recebimento nos campos do formulario
   function getReceipt(id) {
-    const receiptsFilter = receipts.filter(receipt => receipt.id === id);
+    const receiptsFilter = receipts.filter((receipt) => receipt.id === id);
 
     // Converte a data para o padrão USA para inserir no campo ao editar
-    let formatDate = receiptsFilter[0].dataReceipt;
-    let date = formatDate.split('/');
-    let dateFormated = `${date[2]}-${date[1]}-${date[0]}`
+    const formatDate = receiptsFilter[0].dataReceipt;
+    const date = formatDate.split("/");
+    const dateFormated = `${date[2]}-${date[1]}-${date[0]}`;
 
     const data = {
       id: receiptsFilter[0].id,
@@ -81,7 +87,7 @@ function App() {
       clientName: receiptsFilter[0].clientName,
       value: receiptsFilter[0].value,
       formReceipt: receiptsFilter[0].formReceipt,
-    }
+    };
 
     setEdit(true);
     setReceiptToEdit(data);
@@ -89,31 +95,32 @@ function App() {
 
   // função para salvar a edição
   function saveEdit(receipt) {
+    setReceipts(
+      receipts.map((value) => {
+        if (value.id === receipt.id) {
+          // Formata a data para exibição na tabela
+          const formatDateInput = receipt.dataReceipt.split("-");
+          const dateFormated = `${formatDateInput[2]}/${formatDateInput[1]}/${formatDateInput[0]}`;
 
-    setReceipts(receipts.map(value => {
-      if (value.id === receipt.id) {
-        // Formata a data para exibição na tabela
-        let formatDateInput = receipt.dataReceipt.split("-");
-        let dateFormated = `${formatDateInput[2]}/${formatDateInput[1]}/${formatDateInput[0]}`;
+          // Formata o valor para exibição na tabela
+          const formatValueInput = document.getElementById("value").value;
+          const valueInput = formatValueInput.replace(",", ".");
+          const valueFormated = Number(valueInput).toFixed(2).replace(".", ",");
 
-        // Formata o valor para exibição na tabela
-        let formatValueInput = document.getElementById("value").value;
-        let valueInput = formatValueInput.replace(',', '.');
-        let valueFormated = Number(valueInput).toFixed(2).replace('.', ',');
+          const data = {
+            id: receipt.id,
+            dataReceipt: dateFormated,
+            clientName: receipt.clientName,
+            value: valueFormated,
+            formReceipt: receipt.formReceipt,
+          };
 
-        const data = {
-          id: receipt.id,
-          dataReceipt: dateFormated,
-          clientName: receipt.clientName,
-          value: valueFormated,
-          formReceipt: receipt.formReceipt,
-        };
-
-        return data;
-      } else {
-        return value;
-      }
-    }));
+          return data;
+        } else {
+          return value;
+        }
+      })
+    );
     setReceiptToEdit(clearInputs);
     setEdit(false);
     alert("Edição salvo com sucesso!");
